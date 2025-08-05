@@ -1,10 +1,13 @@
 // src/DynamicAccessForm.jsx
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { handleOnboardingSubmit } from "./onboardingHandlers.js";
 
-// Alias the motion.div component so eslint recognizes it as used
+// Alias motion components so eslint recognizes them as used
 const MotionDiv = motion.div;
+const MotionForm = motion.form;
+const MotionButton = motion.button;
+const MotionInput = motion.input;
 
 const ACCESS_CODE = import.meta.env.VITE_ACCESS_CODE || "MY-DEV-CODE";
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA4_ID || "G-Z1JFM6M8YR";
@@ -65,10 +68,12 @@ export default function DynamicAccessForm() {
       <div className="absolute inset-0 flex items-center justify-center px-4">
         <div className="relative w-full max-w-xl">
           {/* Theme Toggle */}
-          <button
+          <MotionButton
             onClick={() => setDarkMode(!darkMode)}
             className="absolute top-4 right-4 p-2 rounded-full bg-white/50 dark:bg-gray-800 backdrop-blur shadow-lg"
             aria-label="Toggle theme"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             {darkMode ? (
               /* Sun Icon */
@@ -82,10 +87,11 @@ export default function DynamicAccessForm() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 0112.21 3a7 7 0 107.79 9.79z" />
               </svg>
             )}
-          </button>
+          </MotionButton>
 
           {/* Card */}
           <MotionDiv
+            layout
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -95,55 +101,76 @@ export default function DynamicAccessForm() {
               Build Brain Onboarding
             </h1>
 
-            {!accessGranted ? (
-              <form onSubmit={handleCodeSubmit} className="flex flex-col sm:flex-row items-center gap-4">
-                <input
-                  type="password"
-                  value={codeInput}
-                  onChange={e => setCodeInput(e.target.value)}
-                  placeholder="Enter onboarding code"
-                  className="flex-1 p-4 text-lg rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-                <button
-                  type="submit"
-                  className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+            <AnimatePresence>
+              {!accessGranted ? (
+                <MotionForm
+                  key="code"
+                  onSubmit={handleCodeSubmit}
+                  className="flex flex-col sm:flex-row items-center gap-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
                 >
-                  Unlock
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleOnboardingSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm font-medium">Full Name</label>
-                    <input type="text" placeholder="Your Name" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" />
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm font-medium">Email Address</label>
-                    <input type="email" placeholder="you@example.com" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" />
-                  </div>
-                  <div className="sm:col-span-2 flex flex-col">
-                    <label className="mb-1 text-sm font-medium">Role / Department</label>
-                    <select className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none">
-                      <option>Engineering</option>
-                      <option>Marketing</option>
-                      <option>Sales</option>
-                      <option>Support</option>
-                    </select>
-                  </div>
-                  <div className="sm:col-span-2 flex flex-col">
-                    <label className="mb-1 text-sm font-medium">Start Date</label>
-                    <input type="date" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+                  <MotionInput
+                    type="password"
+                    value={codeInput}
+                    onChange={e => setCodeInput(e.target.value)}
+                    placeholder="Enter onboarding code"
+                    className="flex-1 p-4 text-lg rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                  <MotionButton
+                    type="submit"
+                    className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Unlock
+                  </MotionButton>
+                </MotionForm>
+              ) : (
+                <MotionForm
+                  key="onboard"
+                  onSubmit={handleOnboardingSubmit}
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
                 >
-                  Submit Onboarding
-                </button>
-              </form>
-            )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                      <label className="mb-1 text-sm font-medium">Full Name</label>
+                      <MotionInput type="text" placeholder="Your Name" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" whileFocus={{ scale: 1.02 }} />
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="mb-1 text-sm font-medium">Email Address</label>
+                      <MotionInput type="email" placeholder="you@example.com" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" whileFocus={{ scale: 1.02 }} />
+                    </div>
+                    <div className="sm:col-span-2 flex flex-col">
+                      <label className="mb-1 text-sm font-medium">Role / Department</label>
+                      <select className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none">
+                        <option>Engineering</option>
+                        <option>Marketing</option>
+                        <option>Sales</option>
+                        <option>Support</option>
+                      </select>
+                    </div>
+                    <div className="sm:col-span-2 flex flex-col">
+                      <label className="mb-1 text-sm font-medium">Start Date</label>
+                      <MotionInput type="date" className="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none" whileFocus={{ scale: 1.02 }} />
+                    </div>
+                  </div>
+                  <MotionButton
+                    type="submit"
+                    className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Submit Onboarding
+                  </MotionButton>
+                </MotionForm>
+              )}
+            </AnimatePresence>
           </MotionDiv>
         </div>
       </div>
