@@ -2,6 +2,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+// Alias the motion.div component so eslint recognizes it as used
+const MotionDiv = motion.div;
+
 const ACCESS_CODE = import.meta.env.VITE_ACCESS_CODE || "MY-DEV-CODE";
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA4_ID || "G-Z1JFM6M8YR";
 
@@ -42,7 +45,7 @@ export default function DynamicAccessForm() {
     <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-black min-h-screen overflow-hidden transition-colors">
       {/* Animated Orbs */}
       {[...Array(6)].map((_, i) => (
-        <motion.div
+        <MotionDiv
           key={i}
           className="absolute rounded-full mix-blend-screen pointer-events-none bg-white/30 dark:bg-indigo-600/20"
           style={{
@@ -81,7 +84,7 @@ export default function DynamicAccessForm() {
           </button>
 
           {/* Card */}
-          <motion.div
+          <MotionDiv
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -140,7 +143,7 @@ export default function DynamicAccessForm() {
                 </button>
               </form>
             )}
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </div>
