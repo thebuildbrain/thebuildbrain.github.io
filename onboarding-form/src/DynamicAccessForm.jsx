@@ -1,6 +1,7 @@
 // src/DynamicAccessForm.jsx
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { handleOnboardingSubmit } from "./onboardingHandlers.js";
 
 // Alias the motion.div component so eslint recognizes it as used
 const MotionDiv = motion.div;
@@ -111,7 +112,7 @@ export default function DynamicAccessForm() {
                 </button>
               </form>
             ) : (
-              <form className="space-y-6">
+              <form onSubmit={handleOnboardingSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="flex flex-col">
                     <label className="mb-1 text-sm font-medium">Full Name</label>
