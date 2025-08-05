@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from 'vitest';
 import { handleOnboardingSubmit } from './onboardingHandlers.js';
 
 test('handleOnboardingSubmit prevents default and logs data', () => {
@@ -22,7 +21,7 @@ test('handleOnboardingSubmit prevents default and logs data', () => {
 
   console.log = originalLog;
 
-  assert.equal(prevented, true);
-  assert.deepEqual(result, { fullName: 'Alice' });
-  assert.deepEqual(logs[0], ['Onboarding form submitted:', { fullName: 'Alice' }]);
+  expect(prevented).toBe(true);
+  expect(result).toEqual({ fullName: 'Alice' });
+  expect(logs[0]).toEqual(['Onboarding form submitted:', { fullName: 'Alice' }]);
 });
